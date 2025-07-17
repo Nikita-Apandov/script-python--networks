@@ -58,8 +58,8 @@ config_list = ("octet.txt", "result.txt", "sh_ip.txt")
 for cfg in config_list:
     result = get_intf(cfg)
     pprint(result)
-'''
 
+######################################
 def check_passwd(username, password, min_len=8, check_numbers=False):
     print(f'{username} {password} {min_len=}')
     if len(password) < min_len:
@@ -76,3 +76,90 @@ def check_passwd(username, password, min_len=8, check_numbers=False):
         return True
     
 check_passwd('admin', 'adsfsdgsdfgsdf234234234')
+###############################################
+'''
+
+
+'''
+# task 9.1 a
+
+from pprint import pprint 
+
+
+def generate_access_config(access_config, access_mode_template, port_security_template, port_security_temp=True):
+    config = []
+    for intf, vlan in access_config.items():
+        config.append(f"{intf}")
+        for command in access_mode_template:
+            if command.endswith("access vlan"):
+                config.append(f" {command} {vlan}")
+            else: 
+                config.append(f" {command}")
+        for com in port_security_template:
+            if port_security_temp is not False:
+                config.append(f" {com}")
+    return config
+
+def main():
+    access_mode_template = [
+        "switchport mode access", "switchport access vlan",
+        "switchport nonegotiate", "spanning-tree portfast",
+        "spanning-tree bpduguard enable"
+    ]
+    access_config = {
+        "FastEthernet0/12": 10,
+        "FastEthernet0/14": 11,
+        "FastEthernet0/16": 17
+    }
+    port_security_template = [
+    "switchport port-security maximum 2",
+    "switchport port-security violation restrict",
+    "switchport port-security"
+    ]
+
+    result = generate_access_config(access_config, access_mode_template, port_security_template)
+    pprint(result)
+
+main()
+
+
+#task 9.2 a
+
+from pprint import pprint 
+
+
+def generate_access_config(trunk_config, trunk_mode_template):
+    config_dict = {}
+    
+    for intf, vlans in trunk_config.items():
+        config = []
+        config.append(f"{intf}")
+        for command in trunk_mode_template:
+            if command.endswith("allowed vlan"):
+                vlan_str = ','.join(str(vlan) for vlan in vlans)
+                config.append(f" {command} {vlan_str}")
+
+            else: 
+                config.append(f" {command}")
+        config_dict[intf] = config
+    return config_dict
+
+def main():
+    trunk_mode_template = [
+    "switchport mode trunk", "switchport trunk native vlan 999",
+    "switchport trunk allowed vlan"
+]
+
+    trunk_config = {
+    "FastEthernet0/1": [10, 20, 30],
+    "FastEthernet0/2": [11, 30],
+    "FastEthernet0/4": [17]
+}
+  
+
+    result = generate_access_config(trunk_config, trunk_mode_template)
+    pprint(result)
+
+main()
+'''
+# task 9.3 
