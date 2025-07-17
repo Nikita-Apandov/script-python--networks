@@ -85,7 +85,7 @@ with open('cam_table.txt', 'r') as file:
             print(f'{line_str[0]:<10}{line_str[1]:<20}{line_str[3]:<10}')
         else: 
             print(f'VLAN {vlan} not found')
-            break
+            
         
 
     
