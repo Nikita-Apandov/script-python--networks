@@ -94,7 +94,7 @@ ip_list = ['19.32.5.3', '13.56.3.23', '23.54.4.2', '135.32.64.2']
 result = sorted(ip_list, key=bin_ip)
 print(result)
 
-'''
+
 # собираем данные в словарик
 
 d_keys = ['hostname', 'location', 'vendor', 'model', 'IOS', 'IP']
@@ -115,3 +115,27 @@ nums = [1, 2, 3, 4, 5]
 nums2 = [100, 200, 300, 400, 500]
 list(map(lambda x, y: x*y, nums, nums2))
 [100, 400, 900, 1600, 2500]
+'''
+# поиск данных в логах с помощью регулярных вырожений 
+import re 
+match = r'\w+\.\w+\.\w+'
+#match = r'\w{4}\.\w{4}\.\w{4}' # другой вариант
+#match = r'\w\w\w\w\.\w\w\w\w\.\w\w\w\w' # другой вариант
+#match = r'\w+[.:]\w+[.:]\w+' # другой вариант
+with open('configtxt/cam_table.txt') as log2:
+    for line in log2:
+        output = re.search(match, line) # поиск мак адресса в лог файле
+        if output:
+            print(output.group())
+        else:
+            continue 
+        #output = re.search(r'\w{4}\.\w{4}\.\w{4}', content) # другой вариант
+        #output = re.search(r'\w\w\w\w\.\w\w\w\w\.\w\w\w\w', content) # другой вариант
+        #output = re.search(r'\w+[.:]\w+[.:]\w+', content) # другой вариант
+   
+'''
+import re 
+line = 'R1# show configure cmds' 
+match = re.search(r'^.+[>#]', line)
+print(match.group) # таким образом узнали имя устройста
+'''
