@@ -1,0 +1,56 @@
+object network NAT_10.66.0.13_995
+ host 10.66.0.13
+ nat (GigabitEthernet0/1,outside) static interface service tcp 995 995
+
+object network NAT_10.66.0.21_20065
+ host 10.66.0.21
+ nat (GigabitEthernet0/1,outside) static interface service tcp 20065 20065
+
+object network NAT_10.66.0.22_443
+ host 10.66.0.22
+ nat (GigabitEthernet0/1,outside) static interface service tcp 443 44443
+
+object network NAT_10.66.0.23_2565
+ host 10.66.0.23
+ nat (GigabitEthernet0/1,outside) static interface service tcp 2565 2565
+
+object network NAT_10.1.2.28_563
+ host 10.1.2.28
+ nat (GigabitEthernet0/1,outside) static interface service tcp 563 563
+
+object network NAT_10.98.1.1_3389
+ host 10.98.1.1
+ nat (GigabitEthernet0/1,outside) static interface service tcp 3389 3389
+
+object network NAT_10.14.1.15_12220
+ host 10.14.1.15
+ nat (GigabitEthernet0/1,outside) static interface service tcp 12220 12220
+
+object network NAT_10.14.1.169_25565
+ host 10.14.1.169
+ nat (GigabitEthernet0/1,outside) static interface service tcp 25565 25565
+
+object network NAT_10.66.0.26_220
+ host 10.66.0.26
+ nat (GigabitEthernet0/1,outside) static interface service tcp 220 220
+
+object network NAT_10.66.37.11_80
+ host 10.66.37.11
+ nat (GigabitEthernet0/1,outside) static interface service tcp 80 8080
+
+object network NAT_10.66.37.13_10995
+ host 10.66.37.13
+ nat (GigabitEthernet0/1,outside) static interface service tcp 10995 10995
+
+object network NAT_10.1.2.84_22
+ host 10.1.2.84
+ nat (GigabitEthernet0/1,outside) static interface service tcp 22 20022
+
+object network NAT_10.1.2.66_22
+ host 10.1.2.66
+ nat (GigabitEthernet0/1,outside) static interface service tcp 22 20023
+
+object network NAT_10.1.2.63_80
+ host 10.1.2.63
+ nat (GigabitEthernet0/1,outside) static interface service tcp 80 80
+

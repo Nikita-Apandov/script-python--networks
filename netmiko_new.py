@@ -26,11 +26,11 @@ def send_show_command(device, commands):
 if __name__ == "__main__":
     device = {
         "device_type": "mikrotik_routeros",
-        "host": "192.168.0.154",
+        "host": "192.168.0.99",
         "username": "admin",
-        "password": "admin"
+        "password": "12345678"
     }
-    commands = ["ip address add address=192.168.0.34/24 interface=ether1", "ip address add address=192.168.0.33/24 interface=ether1", "export"]
+    commands = ["ip address print"]
     result = send_show_command(device, commands)
-    pprint(result, width=120)
+    pprint(result, width=1200)
     input("Нажмите Enter что бы продолжить...")
