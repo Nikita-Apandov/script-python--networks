@@ -115,7 +115,7 @@ nums = [1, 2, 3, 4, 5]
 nums2 = [100, 200, 300, 400, 500]
 list(map(lambda x, y: x*y, nums, nums2))
 [100, 400, 900, 1600, 2500]
-'''
+
 # поиск данных в логах с помощью регулярных вырожений 
 import re 
 match = r'\w+\.\w+\.\w+'
@@ -133,9 +133,27 @@ with open('configtxt/cam_table.txt') as log2:
         #output = re.search(r'\w\w\w\w\.\w\w\w\w\.\w\w\w\w', content) # другой вариант
         #output = re.search(r'\w+[.:]\w+[.:]\w+', content) # другой вариант
    
-'''
+
 import re 
 line = 'R1# show configure cmds' 
 match = re.search(r'^.+[>#]', line)
 print(match.group) # таким образом узнали имя устройста
+
+# замена формата mac адресса с . на :
+import re  
+line = ' 100    01bb.c580.7000    DYNAMIC     Gi0/1'
+result = re.sub(r'(\w+)+\.(\w+)+\.(\w+)', r'\1:\2:\3', line)    
+print(result)
 '''
+# в один ключ список значений 
+my_dict = {}
+
+key = "interface1"
+value = ("192.168.1.1", "255.255.255.0")
+
+# Если ключа нет, создаём список, если есть — добавляем в список
+if key not in my_dict:
+    my_dict[key] = []
+my_dict[key].append(value)
+
+print(my_dict)
