@@ -3,6 +3,7 @@ import logging
 import time
 import socket
 import yaml
+from pprint import pprint
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # автоматический сбор логов маршрутизаторов 
@@ -76,23 +77,34 @@ def send_show(device,
     return output
     
 def collect_data(devices, output_file, max_threads=10):
+    error = []
+    save = []
     with ThreadPoolExecutor(max_workers=max_threads) as ex: # указываем кол-во потоков
         
         future_list = [ex.submit(send_show, dev) for dev in devices] # выполнение функции в одном из потоков, передает данные в порядке пергвого выполненного в отличии от map()
          
         for dev, future in zip(devices, future_list): # cвязали два списка по индексам с помощью zip
             output = future.result() # записали результат объекта future
-            if output is not None: 
+            if output == None:
+                error.append(dev['device_type'])
+            elif output is not None: 
+                save.append(dev['device_type'])
                 with open(output_file.format(dev['device_type']), 'w') as f: 
                     if isinstance(output, list): # если данные строка, то мы записываем их в фаил 
                         f.write('\n'.join(output) + '\n')
                     else: # вдругих случаях преобразуем данные в строку и записываем 
                         f.write(str(output) + '\n')
-    return 
+                
+    return error, save
 if __name__ == "__main__":
     
     with open('configyaml/devices.yaml') as f:
         devices = yaml.safe_load(f) # считываем и преобразуем yaml в тип данных который понимает python (словари, списки)
-        result = collect_data(devices, 'results_{}.txt')
-    
-    
+        error, save = collect_data(devices, 'results_{}.txt')
+        pprint("Список узлов запись конфигурации которых не удалась:")
+        pprint(error)
+        print() # пустая строка для разделения вывода
+        pprint("Список успешно сохранённых узлов:")
+        pprint(save)
+        print() # пустая строка для разделения вывода
+        input('Нажмите Enter для завершения.')
