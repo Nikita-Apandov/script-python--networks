@@ -48,7 +48,7 @@ for item in data:
 data = ['12', '23', 'sdfsdf', '3242dfs', '134']
 digits_only = [int(item) for item in data if item.isdigit()]
 
-# заспоковываем вложенный список
+# распоковываем вложенный список
 vlans = [[12,34,54], [1342,324,554], [132,324,564]]
 data = []
 for vlan in vlans: 

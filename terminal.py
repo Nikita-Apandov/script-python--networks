@@ -1,3 +1,4 @@
+import yaml
 '''
 # создание каталога
 import os
@@ -5,23 +6,46 @@ os.mkdir('configtxt')
 #########################
 # создание файла и заполнение
 
-'''
-with open('configtxt/cisco_nat_config.txt', 'w') as f:
+
+with open('configtxt/devices.txt', 'w') as f:
     mc = """
-ip nat inside source static tcp 10.66.0.13 995 interface GigabitEthernet0/1 995
-ip nat inside source static tcp 10.66.0.21 20065 interface GigabitEthernet0/1 20065
-ip nat inside source static tcp 10.66.0.22 443 interface GigabitEthernet0/1 44443
-ip nat inside source static tcp 10.66.0.23 2565 interface GigabitEthernet0/1 2565
-ip nat inside source static tcp 10.1.2.28 563 interface GigabitEthernet0/1 563
-ip nat inside source static tcp 10.98.1.1 3389 interface GigabitEthernet0/1 3389
-ip nat inside source static tcp 10.14.1.15 12220 interface GigabitEthernet0/1 12220
-ip nat inside source static tcp 10.14.1.169 25565 interface GigabitEthernet0/1 25565
-ip nat inside source static tcp 10.66.0.26 220 interface GigabitEthernet0/1 220
-ip nat inside source static tcp 10.66.37.11 80 interface GigabitEthernet0/1 8080
-ip nat inside source static tcp 10.66.37.13 10995 interface GigabitEthernet0/1 10995
-ip nat inside source static tcp 10.1.2.84 22 interface GigabitEthernet0/1 20022
-ip nat inside source static tcp 10.1.2.66 22 interface GigabitEthernet0/1 20023
-ip nat inside source static tcp 10.1.2.63 80 interface GigabitEthernet0/1 80
+    device = {
+        "device_type": "cisco_ios",
+        "host": "192.168.10.1",
+        "username": "admin",
+        "password": "cisco",
+        "secret": "cisco"
+    }
     """
     f.write(mc) 
+    '''
+with open('configyaml/devices.yaml', 'w') as f: 
+    device =  [
+        {
+        "device_type": "asys",
+        "host": "192.168.10.1",
+        "username": "admin",
+        "password": "cisco",
+        "secret": "cisco",
+        "commands": ["show ip route", "show ip arp"]
+    },
+    {
+        "device_type": "laim",
+        "host": "192.168.10.2",
+        "username": "admin",
+        "password": "cisco",
+        "secret": "cisco",
+        "commands": ["show ip route", "show ip arp"]
+    },
+    {
+        "device_type": "star",
+        "host": "192.168.10.3",
+        "username": "admin",
+        "password": "cisco",
+        "secret": "cisco",
+        "commands": ["show ip route", "show ip arp"]
+    }
+    ]
     
+        
+    yaml.dump(device, f) # запимать в фаил

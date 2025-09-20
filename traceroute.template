@@ -1,0 +1,12 @@
+Value n_hostname (\S+)
+Value n_ip (\S+)
+Value List n_mngmt (\S+)
+
+Start
+ ^Device ID: ${n_hostname} 
+ ^ +IP address: ${n_ip} -> Record
+ ^Management address -> MngmtIP
+
+MngmtIP
+ ^ +IP address: ${n_mngmt}
+ ^.* -> Record Start

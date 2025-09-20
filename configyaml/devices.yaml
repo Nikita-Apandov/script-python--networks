@@ -1,0 +1,24 @@
+- commands:
+  - show ip route
+  - show ip arp
+  device_type: asys
+  host: 192.168.10.1
+  password: cisco
+  secret: cisco
+  username: admin
+- commands:
+  - show ip route
+  - show ip arp
+  device_type: laim
+  host: 192.168.10.2
+  password: cisco
+  secret: cisco
+  username: admin
+- commands:
+  - show ip route
+  - show ip arp
+  device_type: star
+  host: 192.168.10.3
+  password: cisco
+  secret: cisco
+  username: admin

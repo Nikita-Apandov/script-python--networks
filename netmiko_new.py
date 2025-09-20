@@ -14,9 +14,9 @@ def send_show_command(device, commands):
     result = {}
     try:
         with ConnectHandler(**device) as ssh:
-            ssh.enable()
+            ssh.enable() # если есть пароль на enable 
             for command in commands:
-                output = ssh.send_command(command)
+                output = ssh.send_command(command) #  отправлят 1 команду 
                 result[command] = output
         return result
     except (NetmikoTimeoutException, NetmikoAuthenticationException) as error:
@@ -25,12 +25,13 @@ def send_show_command(device, commands):
 
 if __name__ == "__main__":
     device = {
-        "device_type": "mikrotik_routeros",
-        "host": "192.168.0.99",
+        "device_type": "cisco_ios",
+        "host": "192.168.10.1",
         "username": "admin",
-        "password": "12345678"
+        "password": "cisco",
+        "secret": "cisco"
     }
-    commands = ["ip address print"]
+    commands = ["show running-config"]
     result = send_show_command(device, commands)
     pprint(result, width=1200)
     input("Нажмите Enter что бы продолжить...")
