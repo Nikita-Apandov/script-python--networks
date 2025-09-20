@@ -4,7 +4,7 @@ import time
 import re
 import socket
 from pprint import pprint
-
+'''
 def send_show_command(ip, user, password, command, short_sleep=0.2, max_read=10000, long_sleep=2):
     try:   
         cl = paramiko.SSHClient() # говорим что мы клиент SSH
@@ -63,3 +63,20 @@ if __name__ == '__main__':
     for ip in ip_list:
         out = send_show_command(ip, "admin", "12345678", commands)
         pprint(out, width=120)   
+        '''
+cl = paramiko.SSHClient() # говорим что мы клиент SSH
+cl.set_missing_host_key_policy(paramiko.AutoAddPolicy()) # что делать если подключился к устройству впервые
+cl.connect(
+hostname='192.168.0.99',
+username='admin',
+password='12345678',
+look_for_keys=False, # отключение аудентификации по ключу
+allow_agent=False, # отключение аудентификации по ключу
+)
+stdin, stdout, stderr = cl.exec_command('ip address print')
+time.sleep(1)
+out1 = stdout.read().decode('utf-8') # внимание ссессия сбрасывается после каждой команды 
+
+print(out1)
+
+#ssh.close()
