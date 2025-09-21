@@ -1,0 +1,33 @@
+- commands:
+  - configure terminal
+  - aaa new-model
+  - username admin secret cisco
+  - end
+  - write
+  device_type: asys
+  host: 192.168.10.1
+  password: '12345678'
+  secret: cisco
+  username: admin
+- commands:
+  - configure terminal
+  - aaa new-model
+  - username admin secret cisco
+  - end
+  - write
+  device_type: laim
+  host: 192.168.10.2
+  password: '12345678'
+  secret: cisco
+  username: admin
+- commands:
+  - configure terminal
+  - aaa new-model
+  - username admin secret cisco
+  - end
+  - write
+  device_type: star
+  host: 192.168.10.3
+  password: '12345678'
+  secret: cisco
+  username: admin
