@@ -14,10 +14,7 @@ logging.basicConfig(
     format = '%(asctime)s %(threadName)s %(levelname)s: %(message)s',
     level=logging.DEBUG)
 
-def send_show(device, 
-                max_bytes=1000,
-                short_pause=1,
-                long_pause=5):
+def send_show(device, max_bytes=1000, short_pause=1, long_pause=5):
     host = device["host"]
     username = device["username"]
     password = device["password"]
@@ -36,6 +33,35 @@ def send_show(device,
                     look_for_keys=False, 
                     allow_agent=False
                     )
+        with client.invoke_shell() as ssh: # поддержание ссесии ssh
+            logging.info(f'===>  Сессия с: {device_type} активна')
+            ssh.send("enable\n") # вход в режим enable
+            time.sleep(short_pause)
+            ssh.send(f"{secret}\n") # ввод пароля режима enable
+            time.sleep(short_pause) # сон менжду командами
+            for command in commands:
+                ssh.send(f"{command}\n")
+                time.sleep(long_pause)
+                try:
+                    while True:
+                        part = ssh.recv(max_bytes).decode("utf-8").replace("\r\n", "\n") # метод чтения и записи вывода команды
+                        # Удалить BS символы (backspace)
+                        while '\b' in part:
+                            bs_index = part.find('\b') # поиск символа пробела
+                            if bs_index > 0:
+                                part = part[:bs_index-1] + part[bs_index+1:]  # удаляем символ перед BS и сам BS
+                            else:
+                                part = part.replace('\b', '', 1)  # удаляем BS, если он в начале
+                        output += part
+                        if '--More--' in part: 
+                            ssh.send(' ') # пробел что бы прогнать конфиг
+                        elif part.endswith(('#', '>')):
+                            break
+                        time.sleep(short_pause)
+                except socket.timeout:
+                    pass
+            client.close()
+            logging.info(f'<===  Сессия с {device_type} завершина')
     except TimeoutError:
         print(f"Узел: {device_type} в сети не найден")
         return    
@@ -45,35 +71,9 @@ def send_show(device,
     except paramiko.ssh_exception.SSHException:
         print(f"Не удалось подключится к: {device_type} проверьте качество канала связи")
         return 
-    with client.invoke_shell() as ssh: # поддержание ссесии ssh
-        logging.info(f'===>  Сессия с: {device_type} активна')
-        ssh.send("enable\n") # вход в режим enable
-        time.sleep(short_pause)
-        ssh.send(f"{secret}\n") # ввод пароля режима enable
-        time.sleep(short_pause) # сон менжду командами
-        for command in commands:
-            ssh.send(f"{command}\n")
-            time.sleep(long_pause)
-            try:
-                while True:
-                    part = ssh.recv(max_bytes).decode("utf-8").replace("\r\n", "\n") # метод чтения и записи вывода команды
-                    # Удалить BS символы (backspace)
-                    while '\b' in part:
-                        bs_index = part.find('\b') # поиск символа пробела
-                        if bs_index > 0:
-                            part = part[:bs_index-1] + part[bs_index+1:]  # удаляем символ перед BS и сам BS
-                        else:
-                            part = part.replace('\b', '', 1)  # удаляем BS, если он в начале
-                    output += part
-                    if '--More--' in part: 
-                        ssh.send(' ') # пробел что бы прогнать конфиг
-                    elif part.endswith(('#', '>')):
-                        break
-                    time.sleep(short_pause)
-            except socket.timeout:
-                pass
-        client.close()
-        logging.info(f'<===  Сессия с {device_type} завершина')
+    except Exception: 
+        print("Другая ошибка")
+        return
     return output
     
 def collect_data(devices, output_file, max_threads=10):
@@ -98,9 +98,9 @@ def collect_data(devices, output_file, max_threads=10):
     return error, save
 if __name__ == "__main__":
     
-    with open('configyaml/devices.yaml') as f:
+    with open('configyaml/dev_afto_conf.yaml') as f:
         devices = yaml.safe_load(f) # считываем и преобразуем yaml в тип данных который понимает python (словари, списки)
-        error, save = collect_data(devices, 'results_{}.txt')
+        error, save = collect_data(devices, 'config_{}.txt')
         pprint("Список узлов запись конфигурации которых не удалась:")
         pprint(error)
         print() # пустая строка для разделения вывода
