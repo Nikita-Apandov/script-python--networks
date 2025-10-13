@@ -1,4 +1,4 @@
-'''
+
 # строку ip в список 
 
 ip = "192.168.100.1"
@@ -144,7 +144,7 @@ import re
 line = ' 100    01bb.c580.7000    DYNAMIC     Gi0/1'
 result = re.sub(r'(\w+)+\.(\w+)+\.(\w+)', r'\1:\2:\3', line)    
 print(result)
-'''
+
 # в один ключ список значений 
 my_dict = {}
 
@@ -157,3 +157,62 @@ if key not in my_dict:
 my_dict[key].append(value)
 
 print(my_dict)
+
+
+
+#Приобразование строки в число 
+ip = "192.168.100.1"
+ip.split(".") 
+octets = ip.split(".")
+octets_int = []
+for octet in octets: 
+    octets_int.append(int(octet))
+print(octets_int)
+
+# Перебор интерфейсов
+for number in range(10):
+    print(f"interface Ge10/{number}")
+
+
+# Совмещение for & if  
+access_template = ['switchport mode access',
+                     'switchport access vlan',
+                    'spanning-tree portfast',
+                    'spanning-tree bpduguard enable']
+
+access = {'0/12': 10, '0/14': 11, '0/16': 17, '0/17': 150}
+
+for intf, vlan in access.items():
+     print('interface FastEthernet' + intf)
+     for command in access_template:
+         if command.endswith('access vlan'):
+             print(' {} {}'.format(command, vlan))
+         else:
+             print(' {}'.format(command))
+
+# Запрашиваем пароль от пользователя 
+username = input("Введите имя пользователя: ")
+password = input("Введите пароль: ")
+
+while (
+    len(password) < 8 or username.lower() in password.lower()
+    or len(set("0123456789")) & set(password) < 3 
+): 
+    print(f"Пароль для {username} не прошел проверки")
+    password = input("Введите пароль еще раз: ")
+
+print(f"Пароль для {username} прошел все проверки")
+
+#работа с исключениями 
+# -*- coding: utf-8 -*-
+
+try:
+    a = input("Введите первое число: ")
+    b = input("Введите второе число: ")
+    result = int(a)/int(b)
+except (ValueError, ZeroDivisionError):
+    print("Что-то пошло не так...")
+else:
+    print("Результат в квадрате: ", result**2)
+finally: 
+    print("Вот и сказочке конец, а кто слушал - молодец.")
