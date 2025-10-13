@@ -40,52 +40,74 @@ print(result)
 # (вариант 2)print('{:15}{:17}{}'.format(interface, ip_address, mtu))
 
 #####################################
-# task 7.1
-with open('ospf.txt', 'r') as file:
-    for line in file:
-        line_list = line.split()
-        if line_list:
-            pref = line_list[1]
-            ad = line_list[2]
-            hop = line_list[3]
-            update = line_list[4]
-            interface = line_list[5]
-            
-            print(f"""
-Prefix                {pref}
-AD/Metric             {ad.strip("[]")}
-Next-Hop              {hop.rstrip(",")}
-Last update           {update.rstrip(",")}
-Outbound Interface    {interface.rstrip(",")}
-""")
 
-# task 7.2 a,b
-from pprint import pprint
 
-ignore = ["duplex", "alias", "configuration"]
- 
-with open('config_sw1.txt') as file, open('result.txt', 'w') as dest:
-    for line in file:
-        
-        if '!' in line:
-            continue
-        elif any(word in line.lower() for word in ignore):
-            continue    
-        else:
-            dest.write(line)
-            print(line)
+
+
+'''
 '''
 
-#task 7.3 b не могу сделать a !!!
-with open('cam_table.txt', 'r') as file: 
+            
+        
+
+ 
+    
+
+# tack 7.1
+
+with open('configtxt/ospf.txt') as f: 
+    for line in f: 
+        line_new = line.split()
+        print(f"""
+        Prefix                {line_new[1]}
+        AD/Metric             {line_new[2].strip('[]')}
+        Next-Hop              {line_new[4].rstrip(',')}
+        Last update           {line_new[5].rstrip(',')}
+        Outbound Interface    {line_new[6]}
+        """)
+
+
+            
+# tack 7.2 (ab)
+result = []
+ignore = ["duplex", "alias", "configuration"]
+
+with open('configtxt/config_sw1.txt') as f, open('configtxt/result.txt', 'w') as best: 
+    for line in f: 
+        line = line.strip()
+        if any(word in line.lower() for word in ignore):
+            continue
+        elif line and not line.startswith('!'):
+            best.write(f'{line}\n')
+with open('configtxt/result.txt') as f: 
+    print(f.read())
+'''
+
+#task 7.3 (a) это какой то кошмар, но получилось!
+def get_vlan_number(line): 
+    return int(line.split()[0])
+
+config = []
+with open('configtxt/cam_table.txt', 'r') as file: 
+
+    for line in file: 
+        if 'DYNAMIC' in line:
+
+            config.append(line.strip())
+        else: 
+            continue
+
+sorted_lines = sorted(config, key=get_vlan_number)
+
+for line in sorted_lines:
+    print(line)
+
+#task 7.3 (b) 
+with open('configtxt/cam_table.txt', 'r') as file: 
     vlan =input('Enter VLAN number: ')
     for line in file: 
         line_str = line.split()
         if 'DYNAMIC' and vlan in line_str:
             print(f'{line_str[0]:<10}{line_str[1]:<20}{line_str[3]:<10}')
         else: 
-            print(f'VLAN {vlan} not found')
-            
-        
-
-    
+            continue

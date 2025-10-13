@@ -1,0 +1,109 @@
+! Вход в режим глобальной конфигурации
+enable
+configure terminal
+
+! Базовые настройки
+hostname SW-ACCESS-01
+enable secret YourStrongPassword123!
+!
+! Настройки управления
+username admin privilege 15 secret AdminPassword123!
+line console 0
+ logging synchronous
+ exec-timeout 5 0
+ login local
+line vty 0 15
+ logging synchronous
+ exec-timeout 5 0
+ login local
+ transport input ssh
+!
+! Безопасность
+no ip domain-lookup
+ip domain-name company.local
+crypto key generate rsa modulus 2048
+!
+! SNMP и управление
+snmp-server community YourROCommunity RO
+snmp-server community YourRWCommunity RW
+!
+! 
+interface gigabitEthernet 1/0/1
+ description USER-PORT
+ switchport mode access
+ switchport access vlan 10
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security violation restrict
+ switchport port-security aging time 60
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+! 
+interface gigabitEthernet 1/0/2
+ description USER-PORT
+ switchport mode access
+ switchport access vlan 10
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security violation restrict
+ switchport port-security aging time 60
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+ ! 
+interface gigabitEthernet 1/0/3
+ description USER-PORT
+ switchport mode access
+ switchport access vlan 10
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security violation restrict
+ switchport port-security aging time 60
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+
+! Транковые порты (для подключения к другим коммутаторам)
+interface gigabitEthernet 1/0/48
+ description TRUNK-TO-CORE-SW
+ switchport mode trunk
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30,99
+ no shutdown
+!
+! VLAN configuration
+vlan 10
+ name USERS
+vlan 20
+ name SERVERS
+vlan 30
+ name VOICE
+vlan 99
+ name MANAGEMENT
+vlan 999
+ name NATIVE-TRUNK
+!
+! Management interface
+interface vlan 99
+ description MANAGEMENT-VLAN
+ ip address 192.168.99.10 255.255.255.0
+ no shutdown
+!
+! Default gateway
+ip default-gateway 192.168.99.1
+!
+! STP configuration
+spanning-tree mode rapid-pvst
+spanning-tree vlan 1,10,20,30,99,999 priority 24576
+!
+! DHCP Snooping (если используется)
+ip dhcp snooping
+ip dhcp snooping vlan 10,20
+no ip dhcp snooping information option
+!
+! Сохранение конфигурации
+end
+write memory
+copy running-config startup-config
