@@ -1,0 +1,22 @@
+Visual Studio Code:
+
+	/download 
+В нем устанавливаем:
+Pylance
+Python
+Python Debugger
+Russian Language Pack for Visual Studio Code
+
+Python:
+https://www.python.org/downloads/
+
+Библиотеки:
+pip install paramiko pyyaml
+
+pip install pyinstaller (для преврощения скриптов в exe)
+pyinstaller -F "имя скрипта".py # команда для создания exe, создаст папку с exe в той же папке buld можно удалять он для логов
+
+C++:
+
+https://www.msys2.org/ установка 
+https://code.visualstudio.com/docs/cpp/config-mingw инструкция 
